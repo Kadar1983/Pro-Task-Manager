@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pro Task Manager - Pi Login Test</title>
-  <!-- Pi SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@pi-network/pi-sdk@latest/dist/pi-sdk.js"></script>
+  <title>Pro Task Manager - Pi Login</title>
+  <!-- تحميل Pi SDK محليًا -->
+  <script src="js/pi-sdk.js"></script>
 </head>
 <body>
   <h1>Pro Task Manager - Pi Login Test</h1>
@@ -15,14 +15,13 @@
   <div id="userInfo" style="margin-top:20px;"></div>
 
   <script>
-    // تأكد من تحميل Pi SDK
     if (!window.Pi) {
       document.getElementById('userInfo').innerText = "Pi SDK لم يتم تحميله!";
     } else {
       console.log("Pi SDK loaded successfully");
 
       const pi = new Pi({
-        // اختياري: يمكنك وضع appId الخاص بتطبيقك إذا أردت
+        // ضع appId الخاص بتطبيقك إذا أردت
         // appId: "YOUR_APP_ID"
       });
 
