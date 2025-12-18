@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -12,7 +12,7 @@
 
   <button id="loginBtn">Login with Pi</button>
 
-  <div id="userInfo" style="margin-top:20px; font-weight: bold;"></div>
+  <div id="userInfo" style="margin-top:20px; font-weight:bold;"></div>
 
   <script>
     if (!window.Pi) {
@@ -22,11 +22,8 @@
 
       document.getElementById('loginBtn').addEventListener('click', async () => {
         try {
-          // تسجيل الدخول وطلب الموافقة
-          await Pi.authenticate(['username']);
-
-          // جلب بيانات المستخدم بعد المصادقة
-          const user = await Pi.getUser();
+          // تسجيل الدخول وجلب بيانات المستخدم مباشرة
+          const user = await Pi.authenticate(['username']);
           console.log(user);
 
           // عرض اسم المستخدم
