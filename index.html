@@ -12,21 +12,25 @@
 
   <button id="loginBtn">Login with Pi</button>
 
-  <div id="userInfo" style="margin-top:20px;"></div>
+  <div id="userInfo" style="margin-top:20px; font-weight: bold;"></div>
 
   <script>
     if (!window.Pi) {
       document.getElementById('userInfo').innerText = "Pi SDK لم يتم تحميله!";
     } else {
-      console.log("Pi SDK loaded successfully");
-
       Pi.init({ version: "2.0" });
 
       document.getElementById('loginBtn').addEventListener('click', async () => {
         try {
-          const user = await Pi.authenticate(['username']);
+          // تسجيل الدخول وطلب الموافقة
+          await Pi.authenticate(['username']);
+
+          // جلب بيانات المستخدم بعد المصادقة
+          const user = await Pi.getUser();
           console.log(user);
-          document.getElementById('userInfo').innerText =
+
+          // عرض اسم المستخدم
+          document.getElementById('userInfo').innerText = 
             `تم تسجيل الدخول: ${user.username}`;
         } catch (err) {
           console.error(err);
@@ -37,4 +41,4 @@
     }
   </script>
 </body>
-  </html>
+</html>
