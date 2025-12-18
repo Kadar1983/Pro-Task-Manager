@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -10,7 +10,7 @@
 <body>
   <header>
     <h1>Pro Task Manager</h1>
-    <p>Login with Pi to access your tasks and make a test payment</p>
+    <p>Login with Pi to access your tasks and see your app wallet</p>
   </header>
 
   <main>
@@ -20,6 +20,8 @@
     <section id="tasks">
       <!-- سيتم إضافة المهام بعد تسجيل الدخول -->
     </section>
+
+    <div id="walletInfo" style="margin-top:20px; font-weight:bold;"></div>
 
     <button id="payBtn" style="display:none;">اختبار الدفع التجريبي</button>
     <div id="paymentInfo"></div>
@@ -35,6 +37,10 @@
     const userInfo = document.getElementById('userInfo');
     const paymentInfo = document.getElementById('paymentInfo');
     const tasksSection = document.getElementById('tasks');
+    const walletInfo = document.getElementById('walletInfo');
+
+    // ضع هنا عنوان محفظتك العامة الخاصة بالتطبيق
+    const appWalletAddress = "GAYKTZ6VFJTU3W5PCWVVMEIRM43N3BYPS3SYKIG3WJS2A23H5BQQJLTS";
 
     if (!window.Pi) {
       userInfo.innerText = "Pi SDK لم يتم تحميله!";
@@ -47,7 +53,7 @@
           const username = user.username || user.user?.username;
           userInfo.innerText = `تم تسجيل الدخول: ${username}`;
 
-          // عرض المهام بعد تسجيل الدخول
+          // عرض المهام
           tasksSection.innerHTML = `
             <h2>مرحبا ${username}</h2>
             <ul>
@@ -57,7 +63,10 @@
             </ul>
           `;
 
-          // اظهار زر الدفع التجريبي
+          // عرض عنوان المحفظة الخاص بالتطبيق
+          walletInfo.innerText = `عنوان محفظة التطبيق: ${appWalletAddress}`;
+
+          // اظهار زر الدفع التجريبي (سيعمل لاحقًا عند On-Ramp)
           payBtn.style.display = "inline-block";
 
         } catch (err) {
@@ -67,18 +76,7 @@
       });
 
       payBtn.addEventListener('click', async () => {
-        try {
-          // عملية دفع تجريبية
-          const tx = await Pi.makePayment({
-            amount: "0.1", // مثال: 0.1 Pi
-            memo: "اختبار الدفع التجريبي",
-          });
-          console.log(tx);
-          paymentInfo.innerText = `تم الدفع بنجاح! TxID: ${tx.id || tx.transaction_id}`;
-        } catch (err) {
-          console.error(err);
-          paymentInfo.innerText = "حدث خطأ أثناء الدفع: " + err.message;
-        }
+        paymentInfo.innerText = "الدفع التجريبي متاح فقط عند ربط On-Ramp وProduction URL.";
       });
     }
   </script>
