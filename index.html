@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -10,15 +10,19 @@
 <body>
   <header>
     <h1>Pro Task Manager</h1>
-    <p>Login with Pi to access your tasks</p>
+    <p>Login with Pi to access your tasks and make a test payment</p>
   </header>
 
   <main>
     <button id="loginBtn">Login with Pi</button>
     <div id="userInfo"></div>
+
     <section id="tasks">
-      <!-- سيتم إضافة المهام هنا لاحقًا -->
+      <!-- سيتم إضافة المهام بعد تسجيل الدخول -->
     </section>
+
+    <button id="payBtn" style="display:none;">اختبار الدفع التجريبي</button>
+    <div id="paymentInfo"></div>
   </main>
 
   <footer>
@@ -26,8 +30,11 @@
   </footer>
 
   <script>
-    const userInfo = document.getElementById('userInfo');
     const loginBtn = document.getElementById('loginBtn');
+    const payBtn = document.getElementById('payBtn');
+    const userInfo = document.getElementById('userInfo');
+    const paymentInfo = document.getElementById('paymentInfo');
+    const tasksSection = document.getElementById('tasks');
 
     if (!window.Pi) {
       userInfo.innerText = "Pi SDK لم يتم تحميله!";
@@ -40,8 +47,7 @@
           const username = user.username || user.user?.username;
           userInfo.innerText = `تم تسجيل الدخول: ${username}`;
 
-          // بعد تسجيل الدخول يمكن عرض المهام أو أي محتوى
-          const tasksSection = document.getElementById('tasks');
+          // عرض المهام بعد تسجيل الدخول
           tasksSection.innerHTML = `
             <h2>مرحبا ${username}</h2>
             <ul>
@@ -50,9 +56,28 @@
               <li>✅ تحديث حالة المشاريع</li>
             </ul>
           `;
+
+          // اظهار زر الدفع التجريبي
+          payBtn.style.display = "inline-block";
+
         } catch (err) {
           console.error(err);
           userInfo.innerText = "حدث خطأ أثناء تسجيل الدخول: " + err.message;
+        }
+      });
+
+      payBtn.addEventListener('click', async () => {
+        try {
+          // عملية دفع تجريبية
+          const tx = await Pi.makePayment({
+            amount: "0.1", // مثال: 0.1 Pi
+            memo: "اختبار الدفع التجريبي",
+          });
+          console.log(tx);
+          paymentInfo.innerText = `تم الدفع بنجاح! TxID: ${tx.id || tx.transaction_id}`;
+        } catch (err) {
+          console.error(err);
+          paymentInfo.innerText = "حدث خطأ أثناء الدفع: " + err.message;
         }
       });
     }
