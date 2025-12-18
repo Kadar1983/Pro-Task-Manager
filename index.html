@@ -20,24 +20,21 @@
     } else {
       console.log("Pi SDK loaded successfully");
 
-      const pi = new Pi({
-        // ضع appId الخاص بتطبيقك إذا أردت
-        // appId: "YOUR_APP_ID"
-      });
+      Pi.init({ version: "2.0" });
 
       document.getElementById('loginBtn').addEventListener('click', async () => {
         try {
-          const user = await pi.login();
+          const user = await Pi.authenticate(['username']);
           console.log(user);
-          document.getElementById('userInfo').innerText = 
+          document.getElementById('userInfo').innerText =
             `تم تسجيل الدخول: ${user.username}`;
         } catch (err) {
           console.error(err);
-          document.getElementById('userInfo').innerText = 
+          document.getElementById('userInfo').innerText =
             "حدث خطأ أثناء تسجيل الدخول: " + err.message;
         }
       });
     }
   </script>
 </body>
-</html>
+  </html>
