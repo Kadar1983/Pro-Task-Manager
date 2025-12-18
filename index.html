@@ -1,81 +1,120 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Pro Task Manager - Pi Network</title>
+
+  <!-- Pi SDK -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+
   <style>
     body {
+      margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
+      background: #f2f2f2;
     }
-    .box {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
+
+    .container {
       max-width: 420px;
-      margin: auto;
+      margin: 60px auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       text-align: center;
     }
-    input, button {
+
+    h2 {
+      margin-top: 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #7b3fe4;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    input {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
+
     ul {
       list-style: none;
       padding: 0;
+      margin-top: 10px;
     }
+
     li {
-      background: #eee;
-      margin-top: 5px;
+      background: #eeeeee;
       padding: 8px;
       border-radius: 6px;
+      margin-top: 5px;
+    }
+
+    #app {
+      display: none;
     }
   </style>
 </head>
 <body>
 
-<div class="box">
-  <h2>📝 Pro Task Manager</h2>
-  <p id="status">Not logged in</p>
+  <div class="container">
+    <h2>📝 Pro Task Manager</h2>
 
-  <button onclick="login()">Login with Pi</button>
+    <p id="status">Not logged in</p>
 
-  <div id="tasks" style="display:none;">
-    <input id="taskInput" placeholder="New task..." />
-    <button onclick="addTask()">Add Task</button>
-    <ul id="taskList"></ul>
+    <button onclick="login()">Login with Pi</button>
+
+    <div id="app">
+      <input id="taskInput" type="text" placeholder="Enter a new task">
+      <button onclick="addTask()">Add Task</button>
+      <ul id="taskList"></ul>
+    </div>
   </div>
-</div>
 
-<script>
-  Pi.init({ version: "2.0", sandbox: true });
+  <script>
+    // Initialize Pi SDK
+    Pi.init({ version: "2.0", sandbox: true });
 
-  function login() {
-    Pi.authenticate(
-      ["username"],
-      function(auth) {
-        document.getElementById("status").innerText =
-          "Welcome " + auth.user.username;
-        document.getElementById("tasks").style.display = "block";
-      },
-      function(error) {
-        alert(error);
-      }
-    );
-  }
+    function login() {
+      Pi.authenticate(
+        ["username"],
+        function(auth) {
+          document.getElementById("status").innerText =
+            "Welcome " + auth.user.username;
+          document.getElementById("app").style.display = "block";
+        },
+        function(error) {
+          alert("Login error: " + error);
+        }
+      );
+    }
 
-  function addTask() {
-    const input = document.getElementById("taskInput");
-    if (!input.value) return;
-    const li = document.createElement("li");
-    li.innerText = input.value;
-    document.getElementById("taskList").appendChild(li);
-    input.value = "";
-  }
-</script>
+    function addTask() {
+      const input = document.getElementById("taskInput");
+      if (input.value.trim() === "") return;
+
+      const li = document.createElement("li");
+      li.innerText = input.value;
+      document.getElementById("taskList").appendChild(li);
+      input.value = "";
+    }
+  </script>
 
 </body>
 </html>
