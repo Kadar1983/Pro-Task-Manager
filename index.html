@@ -2,119 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Pro Task Manager - Pi Network</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pro Task Manager - Pi Login Test</title>
   <!-- Pi SDK -->
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-    }
-
-    .container {
-      max-width: 420px;
-      margin: 60px auto;
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    h2 {
-      margin-top: 0;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 8px;
-      background: #7b3fe4;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 10px;
-    }
-
-    li {
-      background: #eeeeee;
-      padding: 8px;
-      border-radius: 6px;
-      margin-top: 5px;
-    }
-
-    #app {
-      display: none;
-    }
-  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@pi-network/pi-sdk@latest/dist/pi-sdk.js"></script>
 </head>
 <body>
+  <h1>Pro Task Manager - Pi Login Test</h1>
 
-  <div class="container">
-    <h2>📝 Pro Task Manager</h2>
+  <button id="loginBtn">Login with Pi</button>
 
-    <p id="status">Not logged in</p>
-
-    <button onclick="login()">Login with Pi</button>
-
-    <div id="app">
-      <input id="taskInput" type="text" placeholder="Enter a new task">
-      <button onclick="addTask()">Add Task</button>
-      <ul id="taskList"></ul>
-    </div>
-  </div>
+  <div id="userInfo" style="margin-top:20px;"></div>
 
   <script>
-    // Initialize Pi SDK
-    Pi.init({ version: "2.0", sandbox: true });
+    // تأكد من تحميل Pi SDK
+    if (!window.Pi) {
+      document.getElementById('userInfo').innerText = "Pi SDK لم يتم تحميله!";
+    } else {
+      console.log("Pi SDK loaded successfully");
 
-    function login() {
-      Pi.authenticate(
-        ["username"],
-        function(auth) {
-          document.getElementById("status").innerText =
-            "Welcome " + auth.user.username;
-          document.getElementById("app").style.display = "block";
-        },
-        function(error) {
-          alert("Login error: " + error);
+      const pi = new Pi({
+        // اختياري: يمكنك وضع appId الخاص بتطبيقك إذا أردت
+        // appId: "YOUR_APP_ID"
+      });
+
+      document.getElementById('loginBtn').addEventListener('click', async () => {
+        try {
+          const user = await pi.login();
+          console.log(user);
+          document.getElementById('userInfo').innerText = 
+            `تم تسجيل الدخول: ${user.username}`;
+        } catch (err) {
+          console.error(err);
+          document.getElementById('userInfo').innerText = 
+            "حدث خطأ أثناء تسجيل الدخول: " + err.message;
         }
-      );
-    }
-
-    function addTask() {
-      const input = document.getElementById("taskInput");
-      if (input.value.trim() === "") return;
-
-      const li = document.createElement("li");
-      li.innerText = input.value;
-      document.getElementById("taskList").appendChild(li);
-      input.value = "";
+      });
     }
   </script>
-
 </body>
 </html>
