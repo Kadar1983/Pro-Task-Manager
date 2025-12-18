@@ -1,4 +1,3 @@
-/* Reset بسيط */
 * {
   margin: 0;
   padding: 0;
@@ -31,7 +30,7 @@ header p {
   color: #d1d1d1;
 }
 
-button#loginBtn {
+button {
   background-color: #ffdd59;
   color: #333;
   border: none;
@@ -40,15 +39,16 @@ button#loginBtn {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-top: 15px;
 }
 
-button#loginBtn:hover {
+button:hover {
   background-color: #ffc107;
 }
 
-#userInfo {
+#userInfo, #paymentInfo {
   margin-top: 20px;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: bold;
 }
 
