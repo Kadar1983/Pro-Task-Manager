@@ -1,84 +1,86 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pro Task Manager</title>
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/pi-sdk.js"></script>
-</head>
-<body>
-  <header>
-    <h1>Pro Task Manager</h1>
-    <p>Login with Pi to access your tasks and see your app wallet</p>
-  </header>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <main>
-    <button id="loginBtn">Login with Pi</button>
-    <div id="userInfo"></div>
+  <!-- Pi SDK الرسمي -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
-    <section id="tasks">
-      <!-- سيتم إضافة المهام بعد تسجيل الدخول -->
-    </section>
-
-    <div id="walletInfo" style="margin-top:20px; font-weight:bold;"></div>
-
-    <button id="payBtn" style="display:none;">اختبار الدفع التجريبي</button>
-    <div id="paymentInfo"></div>
-  </main>
-
-  <footer>
-    <p>© 2025 Pro Task Manager</p>
-  </footer>
-
-  <script>
-    const loginBtn = document.getElementById('loginBtn');
-    const payBtn = document.getElementById('payBtn');
-    const userInfo = document.getElementById('userInfo');
-    const paymentInfo = document.getElementById('paymentInfo');
-    const tasksSection = document.getElementById('tasks');
-    const walletInfo = document.getElementById('walletInfo');
-
-    // ضع هنا عنوان محفظتك العامة الخاصة بالتطبيق
-    const appWalletAddress = "GAYKTZ6VFJTU3W5PCWVVMEIRM43N3BYPS3SYKIG3WJS2A23H5BQQJLTS";
-
-    if (!window.Pi) {
-      userInfo.innerText = "Pi SDK لم يتم تحميله!";
-    } else {
-      Pi.init({ version: "2.0" });
-
-      loginBtn.addEventListener('click', async () => {
-        try {
-          const user = await Pi.authenticate(['username']);
-          const username = user.username || user.user?.username;
-          userInfo.innerText = `تم تسجيل الدخول: ${username}`;
-
-          // عرض المهام
-          tasksSection.innerHTML = `
-            <h2>مرحبا ${username}</h2>
-            <ul>
-              <li>✅ إكمال مهمة اليوم</li>
-              <li>✅ مراجعة المهام القادمة</li>
-              <li>✅ تحديث حالة المشاريع</li>
-            </ul>
-          `;
-
-          // عرض عنوان المحفظة الخاص بالتطبيق
-          walletInfo.innerText = `عنوان محفظة التطبيق: ${appWalletAddress}`;
-
-          // اظهار زر الدفع التجريبي (سيعمل لاحقًا عند On-Ramp)
-          payBtn.style.display = "inline-block";
-
-        } catch (err) {
-          console.error(err);
-          userInfo.innerText = "حدث خطأ أثناء تسجيل الدخول: " + err.message;
-        }
-      });
-
-      payBtn.addEventListener('click', async () => {
-        paymentInfo.innerText = "الدفع التجريبي متاح فقط عند ربط On-Ramp وProduction URL.";
-      });
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg,#6a11cb,#2575fc);
+      color: #fff;
+      text-align: center;
+      padding: 30px;
     }
-  </script>
+    button {
+      padding: 14px 28px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      background: #ffdd59;
+      color: #333;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .box {
+      background: rgba(255,255,255,0.15);
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 25px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Pro Task Manager</h1>
+  <p>Login & Complete Step 10</p>
+
+  <button id="loginBtn">Login with Pi</button>
+
+  <div id="info" class="box"></div>
+
+  <button id="payBtn" style="display:none;">اختبار الدفع (Step 10)</button>
+
+  <div id="paymentResult" class="box"></div>
+
+<script>
+  Pi.init({ version: "2.0" });
+
+  let currentUser = null;
+
+  document.getElementById("loginBtn").onclick = async () => {
+    try {
+      currentUser = await Pi.authenticate(["username"]);
+      document.getElementById("info").innerHTML =
+        "تم تسجيل الدخول: <b>" + currentUser.username + "</b>";
+      document.getElementById("payBtn").style.display = "inline-block";
+    } catch (e) {
+      alert("فشل تسجيل الدخول");
+    }
+  };
+
+  document.getElementById("payBtn").onclick = async () => {
+    try {
+      const payment = await Pi.createPayment({
+        amount: 0.01,
+        memo: "Step 10 Test Payment",
+        metadata: { step: "10" }
+      });
+
+      document.getElementById("paymentResult").innerHTML =
+        "✅ تمت العملية بنجاح<br>TxID:<br>" + payment.identifier;
+
+    } catch (e) {
+      document.getElementById("paymentResult").innerHTML =
+        "❌ فشل الدفع: " + e.message;
+    }
+  };
+</script>
+
 </body>
 </html>
