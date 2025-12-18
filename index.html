@@ -1,10 +1,9 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pro Task Manager - Pi Login</title>
-  <!-- تحميل Pi SDK محليًا -->
   <script src="js/pi-sdk.js"></script>
 </head>
 <body>
@@ -22,13 +21,12 @@
 
       document.getElementById('loginBtn').addEventListener('click', async () => {
         try {
-          // تسجيل الدخول وجلب بيانات المستخدم مباشرة
           const user = await Pi.authenticate(['username']);
           console.log(user);
-
-          // عرض اسم المستخدم
+          // بعض النسخ القديمة قد تعيد user.user.username
+          const username = user.username || user.user?.username;
           document.getElementById('userInfo').innerText = 
-            `تم تسجيل الدخول: ${user.username}`;
+            `تم تسجيل الدخول: ${username}`;
         } catch (err) {
           console.error(err);
           document.getElementById('userInfo').innerText =
