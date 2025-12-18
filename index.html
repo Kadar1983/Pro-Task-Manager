@@ -1,0 +1,81 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pro Task Manager - Pi Network</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 420px;
+      margin: auto;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: #eee;
+      margin-top: 5px;
+      padding: 8px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>📝 Pro Task Manager</h2>
+  <p id="status">Not logged in</p>
+
+  <button onclick="login()">Login with Pi</button>
+
+  <div id="tasks" style="display:none;">
+    <input id="taskInput" placeholder="New task..." />
+    <button onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
+  </div>
+</div>
+
+<script>
+  Pi.init({ version: "2.0", sandbox: true });
+
+  function login() {
+    Pi.authenticate(
+      ["username"],
+      function(auth) {
+        document.getElementById("status").innerText =
+          "Welcome " + auth.user.username;
+        document.getElementById("tasks").style.display = "block";
+      },
+      function(error) {
+        alert(error);
+      }
+    );
+  }
+
+  function addTask() {
+    const input = document.getElementById("taskInput");
+    if (!input.value) return;
+    const li = document.createElement("li");
+    li.innerText = input.value;
+    document.getElementById("taskList").appendChild(li);
+    input.value = "";
+  }
+</script>
+
+</body>
+</html>
